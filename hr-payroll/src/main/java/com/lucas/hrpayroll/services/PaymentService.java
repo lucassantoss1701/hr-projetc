@@ -2,11 +2,20 @@ package com.lucas.hrpayroll.services;
 
 
 import com.lucas.hrpayroll.entities.Payment;
+import com.lucas.hrpayroll.entities.Worker;
+import com.lucas.hrpayroll.feignclients.WorkerFeignClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 @Service
 public class PaymentService {
+
+    @Autowired
+    private WorkerFeignClient workerFeignClient;
+
     public Payment getPayment(Long workerId, int days){
-        return new Payment("Lucas", 21.1, days);
+        Worker worker = workerFeignClient.findById(workerId).getBody();
+        return new Payment(worker.getName(), worker.getDailyIncome(), days);
     }
 }
